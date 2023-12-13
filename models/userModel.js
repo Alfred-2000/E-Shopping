@@ -1,12 +1,10 @@
 
 const mongoose = require('mongoose');
-const UUID = require('uuid');
 
 const userSchema = new mongoose.Schema(
     {
         _id : {
-            type : String,
-            default : UUID.v4()
+            type : String
         },
         username : {
             type : String,
@@ -20,11 +18,13 @@ const userSchema = new mongoose.Schema(
         email : {
             type : String,
             required : true,
+            unique: true,
             maxLength : 256
         },
         phone_number : {
             type : String,
-            required : true
+            required : true,
+            unique: true
         },
         is_superuser : {
             type : Boolean,

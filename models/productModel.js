@@ -1,16 +1,15 @@
 
 const mongoose = require('mongoose');
-const UUID = require('uuid');
 
 const productSchema = new mongoose.Schema(
     {
         _id : {
-            type : String,
-            default : UUID.v4()
+            type : String
         },
         name : {
             type : String,
-            required : true
+            required : true,
+            unique: true
         },
         description : {
             type : String
