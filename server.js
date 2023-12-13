@@ -6,6 +6,9 @@ const router = express.Router();
 
 const createSystemAdmin = require('./components/systemAdmin');
 const userRouter = require('./routers/userRouter');
+const productRouter = require('./routers/productRouter')
+const {userLogin} = require('./components/accountsUser');
+const {openAPI} = require('./components/authenticationMiddleware');
 
 const connectionURL = 'mongodb://localhost:27017/ecommerce';
 mongoose.connect(connectionURL, {useNewUrlParser:true, useUnifiedTopology:true});
@@ -24,7 +27,9 @@ app.use(express.json());
 Debug user for debugging purposed*/
 createSystemAdmin();
 
-app.use('/api/account', userRouter);
+app.use('/api/login', openAPI, userLogin);
+app.use('/api/account/', userRouter);
+app.use('/api/product/', productRouter);
 
 
 const HOST_NAME ='localhost';

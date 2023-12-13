@@ -1,5 +1,8 @@
 
+const UUID = require('uuid').v4;
+
 let admin_user_details = {
+    _id : UUID(),
     username : 'Super-Admin',
     password : 'Ecommerce@!123',
     email : 'eadmin@gmail.com',
@@ -8,6 +11,7 @@ let admin_user_details = {
 }
 
 let debug_user_details = {
+    _id : UUID(),
     username : 'Debug-Admin',
     password : 'Ecommerce@!123',
     email : 'edebugadmin@gmail.com',
@@ -15,4 +19,6 @@ let debug_user_details = {
     is_superuser : true
 }
 
-module.exports = {admin_user_details, debug_user_details}
+let JWT_SECRECT_KEY = "A@!b$#cd&10"
+
+module.exports = {admin_user_details, debug_user_details, JWT_SECRECT_KEY}
