@@ -4,22 +4,20 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const UUID = require('uuid').v4;
 const User = require('../models/userModel');
+const Order = require('../models/orderModel');
 const {hashPassword, verifyJWT} = require('./authenticationMiddleware');
-const {JWT_SECRECT_KEY} = require('../constants');
+const {JWT_SECRECT_KEY, JWT_EXPIRY_TIME} = require('../constants');
 
 
 const userLogin = async (request, response) => {
     const {username, password} = request.body;
     try{
-        const user = await User.findOne({username:username});
-        console.log(user);
-        if (!user){
-            error_response = {"error": "USER_DOESNT_EXIST"}
-            response.status(404).json(error_response)
-        }
-        else{
-            const user_data = await User.findOne({username: username});
-            const request_password = hashPassword(username+password);
+        const userExist = await User.findOne({username: username});
+        const emailExist = await User.findOne({email: username});
+        if(userExist || emailExist){
+            const request_password = hashPassword(password);
+            if(userExist){user_data = userExist}
+            else{user_data = emailExist}
             if (user_data.password == request_password){
                 admin_token_details = {
                     "id": user_data._id,
@@ -28,7 +26,7 @@ const userLogin = async (request, response) => {
                     "is_superuser": user_data.is_superuser
                 }
                 expiry_details = {
-                    "expiresIn": '15m',
+                    "expiresIn": JWT_EXPIRY_TIME,
                 }
                 const jwt_token = jwt.sign(admin_token_details, JWT_SECRECT_KEY, expiry_details);
                 success_response = {"msg": "USER_LOGGED_IN_SUCCESSFULLY", "data": []}
@@ -39,6 +37,10 @@ const userLogin = async (request, response) => {
                 error_response = {"error": "INVALID_CREDENTIALS"}
                 response.status(401).json(error_response)
             }
+        }
+        else{
+            error_response = {"error": "USER_DOESNT_EXIST"}
+            response.status(404).json(error_response)            
         }
     }
     catch(error){
@@ -88,7 +90,7 @@ const retrieveAccount = async (request, response) => {
 const registerAccount = async (request, response) => {
     const {username, password, email, phone_number} = request.body;
     request.body._id = UUID();
-    request.body.password = hashPassword(username+password);
+    request.body.password = hashPassword(password);
     try{
         const checkUserExist = await User.findOne({username: username});
         const checkEmailExist = await User.findOne({email: email});
@@ -144,6 +146,7 @@ const deleteAccount = async (request, response) => {
     try{
         const user = await User.deleteOne({_id: userId});
         if(user.deletedCount != 0){
+            const orders = await Order.deleteMany({user_id: userId});
             success_response = {"msg": "ACCOUNT_DELETED_SUCCESSFULLY", "data": user}
             response.json(success_response)
         }
@@ -165,6 +168,7 @@ const deleteMultipleAccounts = async (request, response) => {
     try{
         const users = await User.deleteMany({_id: {"$in": userIds}})
         if(users.deletedCount != 0){
+            const orders = await Order.deleteMany({user_id: {"$in": userIds}});
             success_response = {"msg": "ACCOUNTS_DELETED_SUCCESSFULLY", "data": users}
             response.json(success_response)
         }

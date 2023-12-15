@@ -10,7 +10,7 @@ const createSystemAdmin = async () => {
 
     if(!checkAdminUser){
         try{
-            admin_user_details.password = hashPassword(admin_user_details.username+admin_user_details.password);
+            admin_user_details.password = hashPassword(admin_user_details.password);
             const adminUser = await new User(admin_user_details).save();
             console.log(`System admin ${admin_user_details.username} created successfully !!!`);
         }
@@ -21,7 +21,7 @@ const createSystemAdmin = async () => {
     
     if(!checkDebugUser){
         try{
-            debug_user_details.password = hashPassword(debug_user_details.username+debug_user_details.password);
+            debug_user_details.password = hashPassword(debug_user_details.password);
             const debugUser = await new User(debug_user_details).save();
             console.log(`System admin ${debug_user_details.username} created successfully !!!`);
         }

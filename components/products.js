@@ -93,8 +93,8 @@ const updateProducts = async (request, response) => {
 const deleteProduct = async (request, response) => {
     const productId = request.params.id;
     try{
-        const product = await Product.deleteOne({_id: productId});
-        if(product.deletedCount != 0){
+        const product = await Product.findByIdAndDelete(productId);
+        if(product){
             success_response = {"msg": "PRODUCT_DELETED_SUCCESSFULLY", "data": product}
             response.json(success_response)
         }
