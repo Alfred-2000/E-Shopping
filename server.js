@@ -6,7 +6,8 @@ const router = express.Router();
 
 const createSystemAdmin = require('./components/systemAdmin');
 const userRouter = require('./routers/userRouter');
-const productRouter = require('./routers/productRouter')
+const productRouter = require('./routers/productRouter');
+const orderRouter = require('./routers/orderRouter');
 const {userLogin} = require('./components/accountsUser');
 const {openAPI} = require('./components/authenticationMiddleware');
 
@@ -30,6 +31,7 @@ createSystemAdmin();
 app.use('/api/login', openAPI, userLogin);
 app.use('/api/account/', userRouter);
 app.use('/api/product/', productRouter);
+app.use('/api/order/', orderRouter);
 
 
 const HOST_NAME ='localhost';
