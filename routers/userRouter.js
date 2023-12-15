@@ -1,5 +1,6 @@
 
 const express = require('express');
+const router = express.Router();
 const {
     listAccounts, retrieveAccount, registerAccount,
     updateAccount, deleteAccount, deleteMultipleAccounts
@@ -7,10 +8,9 @@ const {
 
 const {verifyJWT, verifySuperUser,
     openAPI} = require('../components/authenticationMiddleware');
-const router = express.Router();
 
 router.route('/')
-    .get(verifyJWT, listAccounts)
+    .get(verifySuperUser, listAccounts)
     .post(openAPI, registerAccount)
     .delete(verifySuperUser, deleteMultipleAccounts);
 

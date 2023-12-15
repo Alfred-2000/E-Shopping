@@ -1,10 +1,10 @@
 
 const express = require('express');
+const router = express.Router();
 const {verifyJWT, verifySuperUser} = require('../components/authenticationMiddleware');
 const {listProducts, retrieveProduct,
     addProducts, updateProducts,
     deleteProduct, deleteMultipleProducts} = require('../components/products')
-const router = express.Router();
 
 router.route('/')
     .get(verifyJWT, listProducts)
